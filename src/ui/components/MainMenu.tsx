@@ -47,7 +47,7 @@ export function MainMenu({ }) {
                     <Button onClick={handleEditCandidatesButtonClick} style={{justifyContent:"space-between"}}>Editar candidatos <Icon iconName="edit"/> </Button>
                 </Box>
 
-                <span className="little-gray">&copy; Luis Bastidas 2025</span>
+                <span></span>
             </Box>
         </div>
     );
