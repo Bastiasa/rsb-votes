@@ -1,9 +1,0 @@
-{
-    "appId":"com.iersb.votador",
-    "icon":"src/ui/assets/rsb_logo.png",
-    "files":["dist-electron", "dist-react"],
-    "extraResources": ["dist-electron/preload.cjs"],
-    "win": {
-        "target":["portable", "msi"]
-    }
-}
