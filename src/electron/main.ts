@@ -56,16 +56,7 @@ function startBroadcasting() {
     console.log("Starting broadcasting...");
     
 
-    broadcastingSocket = dgram.createSocket("udp4", (message, remoteInformation) => {
-        const hexCode = message.toString("hex");
-        console.log("Message received: ", hexCode.substring(0, 10) + '.'.repeat(Math.min(6, Math.max(hexCode.length - 10, 0))));
-        console.log("From:", remoteInformation.address);
-        
-        const decryptedMessage = "";//decryptText(message.toString("utf-8"), BROADCASTING_ENCODING_KEY);
-        if (decryptedMessage.startsWith("IERSBVCC:")) {
-            const ipAddress = decryptedMessage.substring(0, "IERSBVCC:".length);
-        }
-    });
+    broadcastingSocket = dgram.createSocket("udp4", (message, remoteInformation) => {});
 
     broadcastingSocket.bind(() => {
         broadcastingSocket?.setBroadcast(true);
@@ -115,7 +106,15 @@ function broadcastVotes(): void {
     if (broadcastingSocket != null && currentVotesForBroadcast !== undefined) {
         const targetPort = (broadcastPort > 1024 && broadcastPort < 65535) ? broadcastPort : 8999;
 
-        currentVotesForBroadcast.forEach(candidateVotes => {
+        currentVotesForBroadcast.forEach(_candidateVotes => {
+
+            let candidateVotes: {picture?:string, name?:string, votes:string|number, id:string} = {..._candidateVotes};
+
+            delete candidateVotes.name;
+            delete candidateVotes.picture;
+
+            candidateVotes.votes = candidateVotes.votes.toString(16);
+
             const data = encryptAES(Buffer.from(JSON.stringify(candidateVotes), "utf8"));
 
             broadcastingSocket?.send(
@@ -123,9 +122,7 @@ function broadcastVotes(): void {
                 targetPort,
                 BROADCAST_ADDRESS
             );
-        })
-
-        console.log(`${currentVotesForBroadcast.length} candidates data sent.`);
+        });
     }
 }
 
